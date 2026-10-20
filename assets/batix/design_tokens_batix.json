@@ -1,0 +1,78 @@
+{
+  "project": "BATIX - L'approvisionnement intelligent de vos chantiers",
+  "version": "1.0.0",
+  "colors": {
+    "backgrounds": {
+      "dark_primary": "#06141D",
+      "dark_secondary": "#0A2232",
+      "dark_card_glass": "rgba(13, 35, 52, 0.78)",
+      "dark_card_solid": "#0D2334",
+      "dark_input_bg": "#091B29",
+      "light_primary": "#F4F7FA",
+      "light_card": "#FFFFFF",
+      "light_input_bg": "#EEF2F6"
+    },
+    "brand_emerald": {
+      "light": "#4ADE80",
+      "primary": "#10B981",
+      "vivid": "#1DB954",
+      "dark": "#059669",
+      "deep": "#064E3B"
+    },
+    "brand_orange": {
+      "yellow_gold": "#FBBF24",
+      "primary": "#F59E0B",
+      "vivid": "#FF8C00",
+      "deep": "#EA580C"
+    },
+    "accents_roles": {
+      "client_green": "#16A34A",
+      "supplier_orange": "#EA580C",
+      "driver_blue": "#0284C7",
+      "agent_purple": "#7C3AED",
+      "whatsapp_blue": "#1D4ED8",
+      "urgent_red": "#EF4444"
+    },
+    "text": {
+      "dark_mode_primary": "#FFFFFF",
+      "dark_mode_secondary": "#94A3B8",
+      "dark_mode_price_gold": "#FBBF24",
+      "light_mode_primary": "#082032",
+      "light_mode_secondary": "#64748B",
+      "light_mode_price_green": "#059669"
+    },
+    "borders": {
+      "dark_card_border": "rgba(52, 211, 153, 0.25)",
+      "dark_subtle_border": "rgba(148, 163, 184, 0.20)",
+      "neon_phone_frame": "#10B981",
+      "light_card_border": "#E2E8F0"
+    }
+  },
+  "gradients": {
+    "btn_orange_cta": "linear-gradient(90deg, #FBBF24 0%, #F59E0B 50%, #EA580C 100%)",
+    "btn_green_cta": "linear-gradient(90deg, #4ADE80 0%, #16A34A 55%, #059669 100%)",
+    "banner_green_hero": "linear-gradient(135deg, #064E3B 0%, #047857 60%, rgba(4, 120, 87, 0.1) 100%)",
+    "bg_dark_screen": "radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.18) 0%, #0A2232 45%, #06141D 100%)",
+    "card_supplier_kpi": "linear-gradient(145deg, rgba(16, 185, 129, 0.16) 0%, rgba(10, 34, 50, 0.88) 100%)"
+  },
+  "typography": {
+    "font_family_headings": "'Montserrat', 'Inter', sans-serif",
+    "font_family_body": "'Inter', 'Roboto', sans-serif",
+    "sizes": {
+      "hero_title": "26px",
+      "screen_title": "20px",
+      "section_title": "17px",
+      "card_title": "15px",
+      "body": "14px",
+      "caption_badge": "12px"
+    }
+  },
+  "layout_metrics": {
+    "card_border_radius": "16px",
+    "button_border_radius_pill": "9999px",
+    "button_border_radius_rounded": "14px",
+    "input_height": "52px",
+    "button_height": "54px",
+    "bottom_nav_height": "72px"
+  }
+}

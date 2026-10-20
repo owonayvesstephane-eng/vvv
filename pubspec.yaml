@@ -1,0 +1,24 @@
+name: batix_app
+description: "BATIX - L'approvisionnement intelligent de vos chantiers (Application complète multi-profils)."
+publish_to: 'none'
+version: 1.0.0+1
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  image_picker: ^1.0.7
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/batix/apk_icon_only_logo.png"
+  adaptive_icon_background: "#06141D"
+  adaptive_icon_foreground: "assets/batix/apk_icon_only_logo.png"
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/batix/
