@@ -1,0 +1,97 @@
+name: Build BATIX APK Automatique
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Récupération du code sur GitHub
+        uses: actions/checkout@v4
+      - name: 2. Installation de Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: 3. Installation de Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - name: 4. Création de la structure Android si absente
+        run: |
+          cp lib/main.dart /tmp/main.dart.bak
+          cp pubspec.yaml /tmp/pubspec.yaml.bak
+          if [ ! -d "android" ]; then
+            flutter create --project-name batix_app --org com.batix.app .
+          fi
+          cp /tmp/main.dart.bak lib/main.dart
+          cp /tmp/pubspec.yaml.bak pubspec.yaml
+          # Renomme l'application en "BATIX" sur l'écran du téléphone
+          sed -i 's/android:label="[^"]*"/android:label="BATIX"/g' android/app/src/main/AndroidManifest.xml
+      - name: 5. Extraction du Pack ZIP + Découpe de l'icône APK (Logo seul SANS texte BATIX)
+        run: |
+          mkdir -p assets/batix
+          mkdir -p pack_unzipped
+          for z in *.zip; do
+            if [ -f "$z" ]; then
+              echo "Décompression automatique de $z..."
+              unzip -q -o "$z" -d pack_unzipped/
+            fi
+          done
+          python3 -m pip install Pillow
+          python3 - << 'EOF'
+          import os, shutil
+          from PIL import Image, ImageDraw
+          OUT_DIR = "assets/batix"
+          os.makedirs(OUT_DIR, exist_ok=True)
+          fichiers = []
+          for dossier_racine in ["pack_unzipped", "BATIX_Pack_Complet_Ressources", "."]:
+              if os.path.exists(dossier_racine):
+                  for root, _, files in os.walk(dossier_racine):
+                      if ".git" in root or "build" in root or "00_Planches" in root or "01_Ecrans" in root or "assets/batix" in root:
+                          continue
+                      for f in files:
+                          if f.lower().endswith(('.png', '.jpg', '.jpeg', '.svg', '.json')):
+                              fichiers.append(os.path.join(root, f))
+          logo_source = None
+          for ch in fichiers:
+              nom = os.path.basename(ch).lower()
+              try:
+                  shutil.copy2(ch, os.path.join(OUT_DIR, os.path.basename(ch)))
+              except Exception:
+                  pass
+              if "logo_batix_fond_sombre_avec_slogan" in nom:
+                  logo_source = ch
+              elif ("logo" in nom or "logos_batix" in ch.lower()) and nom.endswith(".png"):
+                  if logo_source is None:
+                      logo_source = ch
+          # Génération de l'icône APK : uniquement le logo du haut SANS écrire "BATIX" en bas
+          icone_path = os.path.join(OUT_DIR, "apk_icon_only_logo.png")
+          if logo_source and os.path.exists(logo_source):
+              img = Image.open(logo_source).convert("RGBA")
+              w, h = img.size
+              embleme = img.crop((14, 0, w - 14, int(h * 0.58)))
+              bg_pixel = embleme.getpixel((2, 2))
+              icone = Image.new("RGBA", (1024, 1024), bg_pixel)
+              embleme_resized = embleme.resize((860, 860), Image.Resampling.LANCZOS)
+              icone.paste(embleme_resized, ((1024 - 860) // 2, (1024 - 860) // 2), embleme_resized)
+              icone.save(icone_path, "PNG")
+              print(f"Logo découpé sans texte depuis : {logo_source}")
+          elif not os.path.exists(icone_path):
+              icone = Image.new("RGBA", (1024, 1024), (6, 20, 29, 255))
+              draw = ImageDraw.Draw(icone)
+              draw.ellipse((112, 112, 912, 912), fill=(16, 185, 129, 255), outline=(245, 158, 11, 255), width=28)
+              icone.save(icone_path, "PNG")
+          print("Icône APK prête :", icone_path)
+          EOF
+      - name: 6. Application de l'icône APK et compilation Flutter
+        run: |
+          flutter pub get
+          dart run flutter_launcher_icons
+          flutter build apk --release
+      - name: 7. Publication de l'APK prêt à télécharger
+        uses: actions/upload-artifact@v4
+        with:
+          name: BATIX-APK-Release
+          path: build/app/outputs/flutter-apk/app-release.apk
